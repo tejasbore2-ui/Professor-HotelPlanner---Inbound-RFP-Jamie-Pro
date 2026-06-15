@@ -7,25 +7,24 @@
   <script src="https://elevenlabs.io/convai-widget/index.js" async></script>
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; }
-    body { font-family: 'Segoe UI', sans-serif; background: #000; display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 100vh; padding: 40px 20px; color: #fff; overflow: hidden; position: relative; }
-    .bg-blob { position: fixed; border-radius: 50%; filter: blur(100px); opacity: 0.2; animation: floatBlob linear infinite; pointer-events: none; z-index: 0; }
-    .blob1 { width: 500px; height: 500px; background: #3b82f6; top: -150px; left: -150px; animation-duration: 18s; }
-    .blob2 { width: 400px; height: 400px; background: #8b5cf6; bottom: -120px; right: -100px; animation-duration: 22s; animation-delay: -8s; }
-    .blob3 { width: 280px; height: 280px; background: #06b6d4; top: 40%; left: 55%; animation-duration: 26s; animation-delay: -4s; }
-    @keyframes floatBlob {
-      0%   { transform: translate(0, 0) scale(1); }
-      33%  { transform: translate(30px, -20px) scale(1.05); }
-      66%  { transform: translate(-20px, 30px) scale(0.97); }
-      100% { transform: translate(0, 0) scale(1); }
-    }
-    h1, .subtitle, .start-btn, .session-box { position: relative; z-index: 1; }
-    h1 { font-size: 2rem; font-weight: 700; margin-bottom: 10px; text-align: center; color: #fff; }
-    .subtitle { font-size: 1rem; color: #aaa; margin-bottom: 40px; text-align: center; }
+    body { font-family: 'Segoe UI', sans-serif; background: #f0f4ff; display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 100vh; padding: 40px 20px; color: #1a1a1a; overflow: hidden; position: relative; }
+    .bg-blob { position: fixed; border-radius: 50%; filter: blur(80px); opacity: 0.35; animation: floatBlob linear infinite; pointer-events: none; z-index: 0; }
+    .blob1 { width: 500px; height: 500px; background: #c7d9ff; top: -100px; left: -150px; animation-duration: 18s; }
+    .blob2 { width: 400px; height: 400px; background: #d4f0e8; bottom: -100px; right: -100px; animation-duration: 22s; animation-delay: -8s; }
+    .blob3 { width: 300px; height: 300px; background: #e8d4f0; top: 40%; left: 55%; animation-duration: 26s; animation-delay: -4s; }
+    @keyframes floatBlob { 0% { transform: translate(0,0) scale(1); } 33% { transform: translate(30px,-20px) scale(1.05); } 66% { transform: translate(-20px,30px) scale(0.97); } 100% { transform: translate(0,0) scale(1); } }
+    h1, .subtitle, .start-btn, .session-box, .tip-box { position: relative; z-index: 1; }
+    h1 { font-size: 2rem; font-weight: 700; margin-bottom: 10px; text-align: center; }
+    .subtitle { font-size: 1rem; color: #555; margin-bottom: 20px; text-align: center; }
+    .tip-box { background: rgba(255,255,255,0.8); border-left: 4px solid #2563eb; border-radius: 8px; padding: 12px 18px; max-width: 480px; width: 100%; margin-bottom: 24px; font-size: 0.85rem; color: #333; line-height: 1.6; }
+    .tip-box strong { display: block; margin-bottom: 4px; color: #1d4ed8; }
     .start-btn { background: #2563eb; color: white; border: none; padding: 16px 40px; font-size: 1.1rem; border-radius: 10px; cursor: pointer; transition: background 0.2s, transform 0.15s; margin-bottom: 30px; }
     .start-btn:hover { background: #1d4ed8; transform: translateY(-2px); }
-    .session-box { background: rgba(255,255,255,0.06); backdrop-filter: blur(12px); border: 1px solid rgba(255,255,255,0.12); border-radius: 12px; padding: 30px 40px; text-align: center; max-width: 480px; width: 100%; box-shadow: 0 4px 30px rgba(0,0,0,0.4); }
-    .session-box h2 { font-size: 1.2rem; margin-bottom: 10px; color: #fff; }
-    .session-box p { font-size: 0.9rem; color: #888; margin-bottom: 24px; }
+    .session-box { background: rgba(255,255,255,0.75); backdrop-filter: blur(12px); border: 1px solid #e0e0e0; border-radius: 12px; padding: 30px 40px; text-align: center; max-width: 480px; width: 100%; box-shadow: 0 4px 20px rgba(0,0,0,0.08); }
+    .session-box h2 { font-size: 1.2rem; margin-bottom: 10px; }
+    .recording-dot { display: inline-block; width: 10px; height: 10px; background: #dc2626; border-radius: 50%; margin-right: 6px; animation: pulse 1.2s infinite; }
+    @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.2; } }
+    #status { font-size: 0.85rem; color: #666; margin-bottom: 16px; min-height: 20px; }
     elevenlabs-convai { display: none; }
   </style>
 </head>
@@ -33,18 +32,102 @@
   <div class="bg-blob blob1"></div>
   <div class="bg-blob blob2"></div>
   <div class="bg-blob blob3"></div>
+
   <h1>Sales Mock Trainer</h1>
   <p class="subtitle">Practice a real voice-based mock sales pitch powered by AI.</p>
-  <button class="start-btn" onclick="startCall()">🎙️ Start Mock Call</button>
+
+  <div class="tip-box">
+    <strong>📋 Before you start — read this:</strong>
+    When you click "Start Mock Call", two permission dialogs will appear:<br>
+    1. <b>Microphone</b> — click Allow.<br>
+    2. <b>Share tab audio</b> — select <b>"This Tab"</b>, make sure <b>"Share tab audio"</b> is checked, then click Share.<br>
+    This ensures both your voice and the agent's voice are recorded.
+  </div>
+
+  <button class="start-btn" id="startBtn" onclick="startCall()">🎙️ Start Mock Call</button>
+
   <div class="session-box">
     <h2>Mock Call Session</h2>
-    <p>Your microphone will activate automatically when the call starts.</p>
-    <button class="start-btn" style="background:#dc2626; margin-bottom:0;" onclick="endCall()">End Call</button>
+    <p id="status">Click "Start Mock Call" to begin.</p>
+    <button class="start-btn" style="background:#dc2626; margin-bottom:0;" onclick="endCall()">End Call & Download Recording</button>
   </div>
-  <elevenlabs-convai id="convai-widget" agent-id="agent_6101ktwb58qxedmt9n2pjfrc41yy"></elevenlabs-convai>
+
+  <elevenlabs-convai id="convai-widget" agent-id="agent_9701k99vwhkmfzsb10ryx3fk9dka"></elevenlabs-convai>
+
   <script>
-    function startCall() { const w = document.getElementById('convai-widget'); w.style.display = 'block'; w.shadowRoot?.querySelector('button')?.click(); }
-    function endCall() { document.getElementById('convai-widget').style.display = 'none'; alert('Call ended. Recording saved to your ElevenLabs dashboard.'); }
+    let mediaRecorder, audioChunks = [], micStream, displayStream, audioCtx;
+
+    async function startCall() {
+      try {
+        document.getElementById('status').textContent = 'Step 1: Requesting microphone...';
+
+        micStream = await navigator.mediaDevices.getUserMedia({ audio: true });
+
+        document.getElementById('status').textContent = 'Step 2: Select "This Tab" and check "Share tab audio", then click Share...';
+
+        displayStream = await navigator.mediaDevices.getDisplayMedia({
+          video: true,
+          audio: true,
+          preferCurrentTab: true
+        });
+
+        // Stop video track — we only need audio
+        displayStream.getVideoTracks().forEach(t => t.stop());
+
+        // Mix mic + tab audio using Web Audio API
+        audioCtx = new AudioContext();
+        const destination = audioCtx.createMediaStreamDestination();
+
+        const micSource = audioCtx.createMediaStreamSource(micStream);
+        micSource.connect(destination);
+
+        const tabAudioTracks = displayStream.getAudioTracks();
+        if (tabAudioTracks.length > 0) {
+          const tabAudioStream = new MediaStream(tabAudioTracks);
+          const tabSource = audioCtx.createMediaStreamSource(tabAudioStream);
+          tabSource.connect(destination);
+        }
+
+        audioChunks = [];
+        mediaRecorder = new MediaRecorder(destination.stream);
+        mediaRecorder.ondataavailable = e => { if (e.data.size > 0) audioChunks.push(e.data); };
+        mediaRecorder.start();
+
+        document.getElementById('status').innerHTML = '<span class="recording-dot"></span> Recording both sides...';
+        document.getElementById('startBtn').disabled = true;
+        document.getElementById('startBtn').style.opacity = '0.5';
+
+        const w = document.getElementById('convai-widget');
+        w.style.display = 'block';
+        w.shadowRoot?.querySelector('button')?.click();
+
+      } catch(err) {
+        document.getElementById('status').textContent = 'Setup cancelled or permission denied. Please try again.';
+        console.error(err);
+      }
+    }
+
+    function endCall() {
+      if (!mediaRecorder || mediaRecorder.state === 'inactive') { alert('No active call to end.'); return; }
+      mediaRecorder.onstop = () => {
+        const blob = new Blob(audioChunks, { type: 'audio/webm' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        const now = new Date();
+        a.href = url;
+        a.download = `mock-call-${now.toISOString().slice(0,19).replace(/:/g,'-')}.webm`;
+        a.click();
+        URL.revokeObjectURL(url);
+        micStream?.getTracks().forEach(t => t.stop());
+        displayStream?.getTracks().forEach(t => t.stop());
+        audioCtx?.close();
+        document.getElementById('status').textContent = 'Call ended. Full recording downloaded!';
+        document.getElementById('startBtn').disabled = false;
+        document.getElementById('startBtn').style.opacity = '1';
+      };
+      mediaRecorder.stop();
+      document.getElementById('convai-widget').style.display = 'none';
+    }
   </script>
 </body>
 </html>
